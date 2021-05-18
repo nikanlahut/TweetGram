@@ -5,6 +5,8 @@ import 'package:deneme_app/pages/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:deneme_app/widgets/ProgressWidget.dart';
 
+//01:14 19.05
+
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
