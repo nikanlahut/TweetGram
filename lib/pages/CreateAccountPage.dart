@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deneme_app/widgets/HeaderWidget.dart';
-import 'dart:async';
+import 'dart:async'; //Timer was undefined so added this
 
 class CreateAccountPage extends StatefulWidget {
   @override
@@ -46,7 +46,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             padding: EdgeInsets.all(17.0),
             child: Container(
               child: Form(
-                autovalidateMode: AutovalidateMode.always, child: TextFormField(
+                autovalidateMode: AutovalidateMode.always, key: _formKey,
+                child: TextFormField(
                   style: TextStyle(color: Colors.white),
                   validator: (val){
                     if(val.isEmpty){

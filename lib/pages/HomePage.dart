@@ -9,11 +9,9 @@ import 'package:deneme_app/pages/UploadPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-FirebaseApp defaultApp = Firebase.app();
 final GoogleSignIn gSignIn = GoogleSignIn();
-final usersReference = FirebaseFirestore.instance.collection("users");
+final usersReference = FirebaseFirestore.instance.collection("users"); //final usersReference = Firestore.instance.collection("users");
 final DateTime timestamp = DateTime.now();
 User currentUser;
 
@@ -65,11 +63,11 @@ class _HomePageState extends State<HomePage>
   }
   saveUserInfoToFireStore() async{
     final GoogleSignInAccount gCurrentUser = gSignIn.currentUser;
-    DocumentSnapshot documentSnapshot = await usersReference.doc(gCurrentUser.id).get();
+    DocumentSnapshot documentSnapshot = await usersReference.doc(gCurrentUser.id).get(); //DocumentSnapshot documentSnapshot = await usersReference.document(gCurrentUser.id).get();
 
     if(!documentSnapshot.exists){
       final username = await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccountPage()));
-      usersReference.doc(gCurrentUser.id).set({
+      usersReference.doc(gCurrentUser.id).set({ //usersReference.document(gCurrentUser.id).set({
         "id": gCurrentUser.id,
         "profileName":gCurrentUser.displayName,
         "username": username,
@@ -78,7 +76,7 @@ class _HomePageState extends State<HomePage>
         "bio": "",
         "timestamp":timestamp,
       });
-      documentSnapshot = await usersReference.doc(gCurrentUser.id).get();
+      documentSnapshot = await usersReference.doc(gCurrentUser.id).get(); //documentSnapshot = await usersReference.document(gCurrentUser.id).get();
     }
 
     currentUser = User.fromDocument(documentSnapshot);
@@ -112,7 +110,7 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       body: PageView(
         children: <Widget>[
-          TimeLinePage(),
+          //TimeLinePage(),
           ElevatedButton.icon(onPressed: logoutUser, icon: Icon(Icons.close), label: Text("Sign Out")),
           SearchPage(),
           UploadPage(),
