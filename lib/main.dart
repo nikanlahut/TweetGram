@@ -4,7 +4,6 @@ import 'package:deneme_app/pages/HomePage.dart';
 void main()
 {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(MyApp());
 }
 
@@ -12,7 +11,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BuddiesGram',
+
+      title: 'TweetGram',
       debugShowCheckedModeBanner: false,
       theme: ThemeData
       (

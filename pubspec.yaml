@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^1.1.1
   cloud_firestore: ^2.1.0
   image: ^3.0.2
   animator: ^3.0.0
@@ -35,7 +36,7 @@ dependencies:
   uuid: ^3.0.4
   cupertino_icons: ^1.0.2
   path_provider: ^2.0.1
-  firebase_messaging: ^9.1.4
+  firebase_messaging: ^10.0.0
   firebase_storage: ^8.0.6
   flutter_svg:
 

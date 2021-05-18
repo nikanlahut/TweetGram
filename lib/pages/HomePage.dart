@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:deneme_app/models/user.dart';
 import 'package:deneme_app/pages/CreateAccountPage.dart';
 import 'package:deneme_app/pages/NotificationsPage.dart';
 import 'package:deneme_app/pages/ProfilePage.dart';
@@ -10,9 +9,11 @@ import 'package:deneme_app/pages/UploadPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_core/firebase_core.dart';
 
+FirebaseApp defaultApp = Firebase.app();
 final GoogleSignIn gSignIn = GoogleSignIn();
-final userReference = Firestore.instance.collection("users");
+final usersReference = FirebaseFirestore.instance.collection("users");
 final DateTime timestamp = DateTime.now();
 User currentUser;
 
@@ -64,11 +65,11 @@ class _HomePageState extends State<HomePage>
   }
   saveUserInfoToFireStore() async{
     final GoogleSignInAccount gCurrentUser = gSignIn.currentUser;
-    DocumentSnapshot documentSnapshot = await usersReference.docment(gCurrentUser.id).get();
+    DocumentSnapshot documentSnapshot = await usersReference.doc(gCurrentUser.id).get();
 
     if(!documentSnapshot.exists){
       final username = await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccountPage()));
-      userReference.document(gCurrentUser.id).setData({
+      usersReference.doc(gCurrentUser.id).set({
         "id": gCurrentUser.id,
         "profileName":gCurrentUser.displayName,
         "username": username,
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage>
         "bio": "",
         "timestamp":timestamp,
       });
-      documentSnapshot = await usersReference.document(gCurrentUser.id).get();
+      documentSnapshot = await usersReference.doc(gCurrentUser.id).get();
     }
 
     currentUser = User.fromDocument(documentSnapshot);
@@ -111,7 +112,7 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       body: PageView(
         children: <Widget>[
-          //TimeLinePage(),
+          TimeLinePage(),
           ElevatedButton.icon(onPressed: logoutUser, icon: Icon(Icons.close), label: Text("Sign Out")),
           SearchPage(),
           UploadPage(),
@@ -156,7 +157,7 @@ class _HomePageState extends State<HomePage>
           children: <Widget>[
             Text(
                 "TweetGram",
-                style: TextStyle (fontSize: 92.0, color: Colors.white, fontFamily:"Signatra")
+                style: TextStyle (fontSize: 92.0, color: Colors.deepPurpleAccent, fontFamily:"Signatra")
             ),
             GestureDetector(
               onTap: loginUser,

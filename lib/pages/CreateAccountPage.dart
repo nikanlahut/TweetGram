@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:deneme_app/widgets/HeaderWidget.dart';
+import 'dart:async';
 
 class CreateAccountPage extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       form.save();
       
       SnackBar snackBar = SnackBar (content: Text("Welcome" + username));
+      // ignore: deprecated_member_use
       _scaffoldKey.currentState.showSnackBar(snackBar);
       Timer(Duration(seconds: 4), (){
         Navigator.pop(context, username);
@@ -43,8 +46,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             padding: EdgeInsets.all(17.0),
             child: Container(
               child: Form(
-                autovalidate: true,
-                child: TextFormField(
+                autovalidateMode: AutovalidateMode.always, child: TextFormField(
                   style: TextStyle(color: Colors.white),
                   validator: (val){
                     if(val.isEmpty){
@@ -91,7 +93,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   child: Text(
                     "Proceed",
                     style: TextStyle(
-                      colors: Colors.white,
+                      color: Colors.white,
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     )
