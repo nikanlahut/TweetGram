@@ -6,12 +6,15 @@ import 'package:deneme_app/pages/ProfilePage.dart';
 import 'package:deneme_app/pages/SearchPage.dart';
 import 'package:deneme_app/pages/TimeLinePage.dart';
 import 'package:deneme_app/pages/UploadPage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn gSignIn = GoogleSignIn();
-final usersReference = FirebaseFirestore.instance.collection("users"); //final usersReference = Firestore.instance.collection("users");
+final usersReference = FirebaseFirestore.instance.collection("users");
+final Reference storageReference = FirebaseStorage.instance.ref().child("Posts Pictures");
+final postsReference = FirebaseFirestore.instance.collection("posts");
 final DateTime timestamp = DateTime.now();
 User currentUser;
 
@@ -60,6 +63,7 @@ class _HomePageState extends State<HomePage>
         isSignedIn = false;
       });
     }
+
   }
   saveUserInfoToFireStore() async{
     final GoogleSignInAccount gCurrentUser = gSignIn.currentUser;
@@ -89,6 +93,7 @@ class _HomePageState extends State<HomePage>
 
   loginUser() {
     gSignIn.signIn();
+
   }
 
   logoutUser() {
@@ -113,7 +118,7 @@ class _HomePageState extends State<HomePage>
           //TimeLinePage(),
           ElevatedButton.icon(onPressed: logoutUser, icon: Icon(Icons.close), label: Text("Sign Out")),
           SearchPage(),
-          UploadPage(),
+          UploadPage(gCurrentUser: currentUser,),
           NotificationsPage(),
           ProfilePage(),
         ],
