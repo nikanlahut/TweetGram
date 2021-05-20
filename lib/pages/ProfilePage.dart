@@ -4,8 +4,8 @@ import 'package:deneme_app/widgets/HeaderWidget.dart';
 import 'package:deneme_app/widgets/ProgressWidget.dart';
 
 import 'package:flutter/material.dart';
-import 'EditProfilePage.dart';
-import 'HomePage.dart';
+import 'package:deneme_app/pages/EditProfilePage.dart';
+import 'package:deneme_app/pages/HomePage.dart';
 
 class ProfilePage extends StatefulWidget {
 
@@ -122,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Container createButtonTitleAndFunction({String title, Function performFunction}) {
     return Container(
       padding: EdgeInsets.only(top: 3.0),
-      child: FlatButton(
+      child: TextButton(
         onPressed: (performFunction),
         child: Container(
           width: 230.0,

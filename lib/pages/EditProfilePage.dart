@@ -18,7 +18,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController profileNameTextEditingController =
   TextEditingController();
   TextEditingController bioTextEditingController = TextEditingController();
-  final _scaffoldGlobalKey = GlobalKey<ScaffoldState>();
+  final _scaffoldGlobalKey = GlobalKey<ScaffoldState>(); //final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   bool loading = false;
   User user;
   bool _bioValid = true;
@@ -60,7 +60,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       });
 
       SnackBar successSnackBar = SnackBar(content: Text("Profile has been updated successfully!"));
-      _scaffoldGlobalKey.currentState.showSnackBar(successSnackBar);
+      _scaffoldGlobalKey.currentState.showSnackBar(successSnackBar);//scaffoldMessengerKey.currentState.showSnackBar(successSnackBar);
     }
   }
 
@@ -109,8 +109,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 29.0, right: 50.0, left: 50.0),
-                  child: RaisedButton(
-                    onPressed: updateUserData(),
+                  child: ElevatedButton(
+                    onPressed: updateUserData,
                     child: Text(
                       "        Update        ",
                       style: TextStyle(color: Colors.black, fontSize: 16.0),
@@ -121,7 +121,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   padding: EdgeInsets.only(top: 10.0, right: 50.0, left: 50.0),
                   child: RaisedButton(
                     color: Colors.red,
-                    onPressed: logoutUser(),
+                    onPressed: logoutUser,
                     child: Text(
                       "Logout",
                       style: TextStyle(color: Colors.white, fontSize: 16.0),
