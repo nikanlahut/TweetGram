@@ -12,12 +12,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 final GoogleSignIn gSignIn = GoogleSignIn();
 final usersReference = FirebaseFirestore.instance.collection("users");
 final Reference storageReference = FirebaseStorage.instance.ref().child("Posts Pictures");
 final postsReference = FirebaseFirestore.instance.collection("posts");
 final DateTime timestamp = DateTime.now();
+final activityFeedReference = FirebaseFirestore.instance.collection("feed");
 User currentUser;
 
 class HomePage extends StatefulWidget {
@@ -93,14 +95,33 @@ class _HomePageState extends State<HomePage>
     currentUser = User.fromDocument(documentSnapshot);
   }
 
+
+
   void dispose(){
     pageController.dispose();
     super.dispose();
   }
 
+/*
   loginUser() {
     gSignIn.signIn();
+  } */
 
+  Future<auth.UserCredential> loginUser() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount googleUser = await gSignIn.signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    // Create a new credential
+    final credential = auth.GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await auth.FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   logoutUser() {

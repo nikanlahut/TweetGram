@@ -5,8 +5,7 @@ import 'package:deneme_app/widgets/ProgressWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
-import 'CImageWidget.dart';
+import 'dart:async';
 
 class Post extends StatefulWidget {
 
@@ -97,7 +96,10 @@ class _PostState extends State<Post> {
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
+    isLiked = (likes[currentOnlineUserId] == true);
+
     return Padding(
       padding: EdgeInsets.only(bottom: 12.0),
       child: Column(
@@ -143,14 +145,80 @@ createPostHead(){
   );
 }
 
+  removeLike(){
+    bool isNotPostOwner = currentOnlineUserId != ownerId;
+
+    if(isNotPostOwner){
+      activityFeedReference.doc(ownerId).collection("feedItems").doc(postId).get().then((doc){
+        if(doc.exists)
+        {
+          doc.reference.delete();
+        }
+      });
+    }
+  }
+
+  addLike()
+  {
+    bool isNotPostOwner = currentOnlineUserId != ownerId;
+
+    if(isNotPostOwner)
+    {
+      activityFeedReference.doc(ownerId).collection("feedItems").doc(postId).set({
+        "type": "like",
+        "username": currentUser.username,
+        "userId": currentUser.id,
+        "timestamp": DateTime.now(),
+        "url": url,
+        "postId": postId,
+        "userProfileImg": currentUser.url,
+      });
+    }
+  }
+
+  controlUserLikePost(){
+    bool _liked = likes[currentOnlineUserId] == true;
+
+    if(_liked)
+    {
+      postsReference.doc(ownerId).collection("usersPosts").doc(postId).update({"likes.$currentOnlineUserId": false});
+
+      removeLike();
+
+      setState(() {
+        likeCount = likeCount - 1;
+        isLiked = false;
+        likes[currentOnlineUserId] = false;
+      });
+    }
+    else if(!_liked)
+    {
+      postsReference.doc(ownerId).collection("usersPosts").doc(postId).update({"likes.$currentOnlineUserId": true});
+
+      addLike();
+
+      setState(() {
+        likeCount = likeCount + 1;
+        isLiked = true;
+        likes[currentOnlineUserId] = true;
+        showHeart = true;
+      });
+      Timer(Duration(milliseconds: 800), (){
+        setState(() {
+          showHeart = false;
+        });
+      });
+    }
+  }
 
 createPostPicture(){
   return GestureDetector(
-    onDoubleTap: ()=> print("post liked"),
+    onDoubleTap: ()=> controlUserLikePost,
     child: Stack(
       alignment: Alignment.center,
       children: <Widget>[
         Image.network(url),
+        showHeart ? Icon(Icons.favorite, size: 140.0, color: Colors.pink,) : Text(""),
       ],
     ),
   );
@@ -165,12 +233,11 @@ createPostFooter(){
         children: <Widget>[
           Padding(padding: EdgeInsets.only(top: 40.0, left: 20.0),),
           GestureDetector(
-            onTap: ()=> print("liked post"),
+            onTap: ()=> controlUserLikePost(),
             child: Icon(
-              Icons.favorite, color: Colors.grey,
-              //           isLiked   ? Icons.favorite : Icons.favorite_border,
-//            size: 28.0,
-//            color: Colors.pinkAccent
+              isLiked   ? Icons.favorite : Icons.favorite_border,
+              size: 28.0,
+              color: Colors.pinkAccent,
             ),
           ),
           Padding(padding: EdgeInsets.only(right: 20.0),),
