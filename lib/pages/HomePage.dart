@@ -6,6 +6,7 @@ import 'package:deneme_app/pages/ProfilePage.dart';
 import 'package:deneme_app/pages/SearchPage.dart';
 import 'package:deneme_app/pages/TimeLinePage.dart';
 import 'package:deneme_app/pages/UploadPage.dart';
+import 'package:deneme_app/utils/crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage>
 
   void initState(){
     super.initState();
+    enableCrashlytics();
 
     pageController = PageController();
 
