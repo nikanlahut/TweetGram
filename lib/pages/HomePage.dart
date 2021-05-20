@@ -6,6 +6,8 @@ import 'package:deneme_app/pages/ProfilePage.dart';
 import 'package:deneme_app/pages/SearchPage.dart';
 import 'package:deneme_app/pages/TimeLinePage.dart';
 import 'package:deneme_app/pages/UploadPage.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,11 @@ final DateTime timestamp = DateTime.now();
 User currentUser;
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key key, this.analytics, this.observer}) : super(key: key);
+
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
