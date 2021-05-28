@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deneme_app/models/user.dart';
+import 'package:deneme_app/pages/CommentsPage.dart';
 import 'package:deneme_app/pages/HomePage.dart';
 import 'package:deneme_app/widgets/ProgressWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -242,7 +243,7 @@ createPostFooter(){
           ),
           Padding(padding: EdgeInsets.only(right: 20.0),),
           GestureDetector(
-            onTap: ()=> print("show comments"),
+            onTap: ()=> displayComments(context, postId: postId, ownerId: ownerId, url: url),
             child: Icon(Icons.chat_bubble_outline, size: 28.0, color: Colors.white,),
           ),
         ],
@@ -273,4 +274,13 @@ createPostFooter(){
     ],
   );
 }
+
+  displayComments(BuildContext context, {String postId, String ownerId, String url})
+  {
+    Navigator.push(context, MaterialPageRoute(builder: (context)
+    {
+      return CommentsPage(postId: postId, postOwnerId: ownerId, postImageUrl: url);
+    }
+    ));
+  }
 }

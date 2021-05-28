@@ -33,7 +33,7 @@ class _UploadPageState extends State<UploadPage> with AutomaticKeepAliveClientMi
   captureImageWithCamera() async{
     Navigator.pop(context);
     final pickedFile = await _picker.getImage(
-     source: ImageSource.camera,
+      source: ImageSource.camera,
       maxHeight: 680,
       maxWidth: 970,
     );
@@ -92,13 +92,13 @@ class _UploadPageState extends State<UploadPage> with AutomaticKeepAliveClientMi
           Icon(Icons.add_photo_alternate, color: Colors.grey, size: 200.0,),
           Padding(
             padding: EdgeInsets.only(top: 20.0),
-              child: ElevatedButton( //raised button
-                //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9.0),),
-                child: Text("Upload Image", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                onPressed: () => takeImage(context),
-                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9.0),)
-                ),
+            child: ElevatedButton( //raised button
+              //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9.0),),
+              child: Text("Upload Image", style: TextStyle(color: Colors.white, fontSize: 20.0),),
+              onPressed: () => takeImage(context),
+              style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9.0),)
               ),
+            ),
           ),
         ],
       ),
@@ -119,7 +119,7 @@ class _UploadPageState extends State<UploadPage> with AutomaticKeepAliveClientMi
     String completeAddressInfo = '${mPlaceMark.subThoroughfare} ${mPlaceMark.thoroughfare}, ${mPlaceMark.subLocality} ${mPlaceMark.locality}, ${mPlaceMark.subAdministrativeArea} ${mPlaceMark.administrativeArea}, ${mPlaceMark.postalCode} ${mPlaceMark.country},';
     String specificAddress = '${mPlaceMark.locality}, ${mPlaceMark.country}';
     locationTextEditingController.text= specificAddress;
-}
+  }
 
   compressingPhoto() async{
     final tDirectory = await getTemporaryDirectory();
@@ -168,10 +168,10 @@ class _UploadPageState extends State<UploadPage> with AutomaticKeepAliveClientMi
 
 
   Future<String> uploadPhoto(mImageFile) async{
-     UploadTask mStorageUploadTask = storageReference.child("post_$postId.jpg").putFile(mImageFile);
-     TaskSnapshot storageTaskSnapshot = await mStorageUploadTask;
-     String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
-     return downloadUrl;
+    UploadTask mStorageUploadTask = storageReference.child("post_$postId.jpg").putFile(mImageFile);
+    TaskSnapshot storageTaskSnapshot = await mStorageUploadTask;
+    String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
+    return downloadUrl;
   }
 
   displayUploadFormScreen(){
@@ -243,9 +243,9 @@ class _UploadPageState extends State<UploadPage> with AutomaticKeepAliveClientMi
             alignment: Alignment.center,
             // ignore: deprecated_member_use
             child: RaisedButton.icon(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35.0)),
-                color: Colors.green,
-                icon: Icon(Icons.location_on, color: Colors.white,),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35.0)),
+              color: Colors.green,
+              icon: Icon(Icons.location_on, color: Colors.white,),
               label: Text("Get my Current Location", style: TextStyle(color: Colors.white),),
               onPressed: getUserCurrentLocation,
             ),
@@ -262,3 +262,4 @@ class _UploadPageState extends State<UploadPage> with AutomaticKeepAliveClientMi
     return file == null ? displayUploadScreen() : displayUploadFormScreen();
   }
 }
+
