@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deneme_app/models/user.dart';
 import 'package:deneme_app/pages/HomePage.dart';
+import 'package:deneme_app/pages/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:deneme_app/widgets/ProgressWidget.dart';
 
@@ -123,7 +124,7 @@ class UserResult extends StatelessWidget
         child: Column(
           children: <Widget>[
             GestureDetector(
-              onTap: ()=> print("tapped"),
+              onTap: ()=> displayUserProfile(context, userProfileId: eachUser.id),
               child: ListTile(
                 leading: CircleAvatar(backgroundColor: Colors.black, backgroundImage: CachedNetworkImageProvider(eachUser.url),),
                 title: Text(eachUser.profileName, style: TextStyle(
@@ -138,5 +139,9 @@ class UserResult extends StatelessWidget
         ),
       ),
     );
+  }
+  displayUserProfile(BuildContext context, {String userProfileId})
+  {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(userProfileId: userProfileId)));
   }
 }

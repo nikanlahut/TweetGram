@@ -27,9 +27,46 @@ class _ProfilePageState extends State<ProfilePage> {
   int countPost = 0;
   List<Post> postsList = [];
   String postOrientation = "grid";
+  int countTotalFollowers = 0;
+  int countTotalFollowings = 0;
+  bool following = false;
+
 
   void initState(){
     getAllProfilePosts();
+    getAllFollowers();
+    getAllFollowings();
+    checkIfAlreadyFollowing();
+  }
+  getAllFollowings() async
+  {
+    QuerySnapshot querySnapshot = await followingRefrence.doc(widget.userProfileId)
+        .collection("userFollowing").get();
+
+    setState(() {
+      countTotalFollowings = querySnapshot.docs.length;
+    });
+  }
+
+  checkIfAlreadyFollowing() async
+  {
+    DocumentSnapshot documentSnapshot = await followersRefrence
+        .doc(widget.userProfileId).collection("userFollowers")
+        .doc(currentOnlineUserId).get();
+
+    setState(() {
+      following = documentSnapshot.exists;
+    });
+  }
+
+  getAllFollowers() async
+  {
+    QuerySnapshot querySnapshot = await followersRefrence.doc(widget.userProfileId)
+        .collection("userFollowers").get();
+
+    setState(() {
+      countTotalFollowers = querySnapshot.docs.length;
+    });
   }
 
   createProfileTopView(){
@@ -60,9 +97,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget> [
-                            createColumns("posts", postsList.length),
-                            createColumns("followers", 0),
-                            createColumns("following", 0),
+                            createColumns("posts", countPost),
+                            createColumns("followers", countTotalFollowers),
+                            createColumns("following", countTotalFollowings),
                           ],
                         ),
                         Row(
@@ -126,9 +163,80 @@ class _ProfilePageState extends State<ProfilePage> {
 
   createButton() {
     bool ownProfile = currentOnlineUserId == widget.userProfileId;
-    if(ownProfile) {
+    if(ownProfile)
+    {
       return createButtonTitleAndFunction(title: "Edit Profile", performFunction: editUserProfile,);
     }
+    else if(following)
+    {
+      return createButtonTitleAndFunction(title: "Unfollow", performFunction: controlUnfollowUser,);
+    }
+    else if(!following)
+    {
+      return createButtonTitleAndFunction(title: "Follow", performFunction: controlFollowUser,);
+    }
+  }
+  controlUnfollowUser()
+  {
+    setState(() {
+      following = false;
+    });
+
+    followersRefrence.doc(widget.userProfileId)
+        .collection("userFollowers")
+        .doc(currentOnlineUserId)
+        .get()
+        .then((doc){
+      if(doc.exists)
+      {
+        doc.reference.delete();
+      }
+    });
+
+    followingRefrence.doc(currentOnlineUserId)
+        .collection("userFollowing")
+        .doc(widget.userProfileId)
+        .get()
+        .then((doc){
+      if(doc.exists)
+      {
+        doc.reference.delete();
+      }
+    });
+
+    activityFeedReference.doc(widget.userProfileId).collection("feedItems")
+        .doc(currentOnlineUserId).get().then((doc){
+      if(doc.exists)
+      {
+        doc.reference.delete();
+      }
+    });
+  }
+
+  controlFollowUser()
+  {
+    setState(() {
+      following = true;
+    });
+
+    followersRefrence.doc(widget.userProfileId).collection("userFollowers")
+        .doc(currentOnlineUserId)
+        .set({});
+
+    followingRefrence.doc(currentOnlineUserId).collection("userFollowing")
+        .doc(widget.userProfileId)
+        .set({});
+
+    activityFeedReference.doc(widget.userProfileId)
+        .collection("feedItems").doc(currentOnlineUserId)
+        .set({
+      "type": "follow",
+      "ownerId": widget.userProfileId,
+      "username": currentUser.username,
+      "timestamp": DateTime.now(),
+      "userProfileImg": currentUser.url,
+      "userId": currentOnlineUserId,
+    });
   }
 
   Container createButtonTitleAndFunction({String title, Function performFunction}) {
@@ -139,11 +247,11 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Container(
           width: 230.0,
           height: 26.0,
-          child: Text(title, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),),
+          child: Text(title, style: TextStyle(color: following ? Colors.grey : Colors.white70, fontWeight: FontWeight.bold),),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Colors.black,
-            border: Border.all(color: Colors.grey),
+            color: following ? Colors.black : Colors.white70,
+            border: Border.all(color: following ? Colors.grey : Colors.grey),
             borderRadius: BorderRadius.circular(6.0),
           ),
         ),
